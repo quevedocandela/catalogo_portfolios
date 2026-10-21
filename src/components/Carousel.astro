@@ -44,6 +44,12 @@ import { slides } from "../data/carousel";
   .dot.active { background: var(--yellow); }
   @media (max-width: 640px) { .viewport { aspect-ratio: 4 / 3; } }
   @media (prefers-reduced-motion: reduce) { .track { transition: none; } .slide.active img { animation: none; } }
+  @media (max-width: 640px) {
+    .carousel { padding: 0 16px; }
+    .frame { box-shadow: 5px 5px 0 var(--pink); }
+    .nav { width: 34px; height: 34px; front-size: 1.3rem; }
+    .prev {left: 8px; } .next { right: 8px; }
+  }
 </style>
 
 <script>

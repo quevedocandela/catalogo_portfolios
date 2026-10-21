@@ -1,50 +1,57 @@
 ---
 import type { Portfolio } from "../data/portfolios";
 import { getLang } from "../data/languages";
+import PixelIcon from "./PixelIcon.astro";
 
 const { name, cover, languages, link } = Astro.props as Portfolio;
-const langs = languages.map(getLang);
 
 // Color estable por nombre para el fallback sin portada
 let h = 0;
 for (const c of name) h = (h * 31 + c.charCodeAt(0)) % 360;
-const bg = cover
-  ? `background-image:url('${cover}')`
-  : `background:linear-gradient(135deg,hsl(${h} 65% 48%),hsl(${(h + 50) % 360} 70% 38%))`;
-const search = `${name} ${langs.map((l) => l.label).join(" ")}`.toLowerCase();
+const fallback = `background:linear-gradient(135deg,hsl(${h} 60% 40%),hsl(${(h + 50) % 360} 65% 28%))`;
+const search = `${name} ${languages.map((l) => getLang(l).label).join(" ")}`.toLowerCase();
 ---
-<article class="card" data-search={search}>
-  <div class="cover" style={bg} role="img" aria-label={`Portada de ${name}`}>
-    {!cover && name.trim()[0].toUpperCase()}
-  </div>
+<a class="card" href={link} target="_blank" rel="noopener" data-search={search} aria-label={`Ver portfolio de ${name}`}>
+  {cover
+    ? <img class="cover" src={cover} alt={`Portada del portfolio de ${name}`} decoding="async" />
+    : <div class="cover ph" style={fallback}><span>{name.trim()[0].toUpperCase()}</span></div>}
   <div class="info">
-    <h2>{name}</h2>
-    <ul class="langs" aria-label="Lenguajes">
-      {langs.map((l) => (
-        <li title={l.label}>
-          {l.icon
-            ? <img src={l.icon} alt={l.label} width="24" height="24" loading="lazy" />
-            : <span class="txt">{l.label}</span>}
-        </li>
-      ))}
-    </ul>
-    <a class="btn" href={link} target="_blank" rel="noopener">Ver portfolio</a>
+    <div class="who">
+      <h2>{name}</h2>
+      <ul class="langs" aria-label="Lenguajes">
+        {languages.map((l) => <li><PixelIcon lang={l} /></li>)}
+      </ul>
+    </div>
+    <span class="cta">Ver portfolio <span aria-hidden="true">→</span></span>
   </div>
-</article>
+</a>
 
 <style>
-  .card { background: var(--surface); border: 2px solid var(--line); display: flex; flex-direction: column; transition: transform .15s, box-shadow .15s; }
+  .card { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: transform .2s, box-shadow .2s, border-color .2s; }
   .card[hidden] { display: none; }
-  .card:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--pink); }
-  .cover { aspect-ratio: 4/3; display: grid; place-items: center; font-family: var(--font-pixel); font-size: 2.6rem; color: #fff; background-size: cover; background-position: center; border-bottom: 2px solid var(--line); }
-  .info { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
-  h2 { font-size: 1.15rem; }
-  .langs { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; flex: 1; align-content: flex-start; }
-  .langs li { min-width: 40px; height: 40px; padding: 7px; display: grid; place-items: center; background: var(--w, #f1ecff); border: 2px solid var(--line); }
-  .langs img { display: block; }
-  .txt { font-family: var(--font-mono); font-size: .75rem; font-weight: 700; color: var(--accent-text); padding: 0 4px; }
-  .btn { display: block; text-align: center; padding: 10px; background: var(--accent); color: var(--accent-text); text-decoration: none; font-family: var(--font-mono); font-weight: 700; }
-  .btn:hover { background: #fff; }
-  .btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { .card { transition: none; } .card:hover { transform: none; } }
+  .card:hover, .card:focus-visible { transform: translateY(-4px); border-color: var(--pink); box-shadow: 6px 6px 0 var(--pink); }
+  .card:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+  /* la imagen se muestra completa, con su tamaño real (sin recortar) */
+  .cover { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); }
+  .ph { aspect-ratio: 2 / 1; display: grid; place-items: center; font-family: var(--font-pixel); font-size: 2.4rem; color: #fff; }
+
+  .info { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px 16px; }
+  .who { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  h2 { font-size: 1.05rem; line-height: 1.25; }
+  .langs { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* botón en el espacio libre, a la derecha */
+  .cta { flex-shrink: 0; white-space: nowrap; padding: 8px 12px; background: var(--accent); color: var(--accent-text); border: 2px solid #1a1230; box-shadow: 3px 3px 0 #000; font-family: var(--font-mono); font-weight: 700; font-size: .8rem; opacity: 0; transform: translateX(-8px); transition: opacity .2s, transform .2s; }
+  @media (hover: hover) {
+    .card:hover .cta, .card:focus-visible .cta { opacity: 1; transform: none; }
+  }
+  /* celulares y tablets: no hay hover, el botón se ve siempre */
+  @media (hover: none) { .cta { opacity: 1; transform: none; } }
+  @media (max-width: 380px) { .cta { padding: 7px 9px; font-size: .72rem; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card, .cta { transition: none; }
+    .card:hover, .card:focus-visible { transform: none; }
+  }
 </style>

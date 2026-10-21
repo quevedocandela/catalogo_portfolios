@@ -1,8 +1,10 @@
 ---
+import { sortedPortfolios } from "../data/portfolios";
+const total = sortedPortfolios.length;
 ---
 <div class="bar">
-  <input id="q" type="search" placeholder="Buscar por nombre o proyecto" aria-label="Buscar" />
-  <span id="count"></span>
+  <input id="q" type="search" placeholder="Buscar por nombre o lenguaje" aria-label="Buscar portfolios" autocomplete="off" />
+  <span id="count" aria-live="polite">{total} de {total} portfolios</span>
 </div>
 
 <style>
@@ -11,26 +13,30 @@
   input::placeholder { color: var(--muted); }
   input:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
   #count { color: var(--green); font-family: var(--font-mono); font-size: .9rem; }
+  @media (max-width: 640px) { .bar { padding: 20px 16px; } }
 </style>
 
 <script>
-  const input = document.getElementById("q") as HTMLInputElement;
-  const count = document.getElementById("count")!;
-  const cards = document.querySelectorAll<HTMLElement>("[data-search]");
+  // Quita tildes y mayúsculas para que "oscar" encuentre "Óscar"
+  const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+  const input = document.getElementById("q") as HTMLInputElement | null;
+  const count = document.getElementById("count");
   const empty = document.getElementById("empty");
 
   function filter() {
-    const term = input.value.trim().toLowerCase();
+    const cards = document.querySelectorAll<HTMLElement>("[data-search]");
+    const term = norm(input?.value ?? "");
     let visible = 0;
     cards.forEach((card) => {
-      const match = card.dataset.search!.includes(term);
+      const match = norm(card.dataset.search ?? "").includes(term);
       card.hidden = !match;
       if (match) visible++;
     });
-    count.textContent = `${visible} de ${cards.length} portfolios`;
+    if (count) count.textContent = `${visible} de ${cards.length} portfolios`;
     if (empty) empty.hidden = visible > 0;
   }
 
-  input.addEventListener("input", filter);
+  input?.addEventListener("input", filter);
   filter();
 </script>

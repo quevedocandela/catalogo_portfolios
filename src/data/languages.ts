@@ -1,31 +1,31 @@
-const BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/icons";
+export interface Lang { label: string; text: string; bg: string; fg: string }
 
-const known: Record<string, { label: string; file: string }> = {
-  html:       { label: "HTML",       file: "html5/html5-original.svg" },
-  css:        { label: "CSS",        file: "css3/css3-original.svg" },
-  javascript: { label: "JavaScript", file: "javascript/javascript-original.svg" },
-  typescript: { label: "TypeScript", file: "typescript/typescript-original.svg" },
-  python:     { label: "Python",     file: "python/python-original.svg" },
-  java:       { label: "Java",       file: "java/java-original.svg" },
-  php:        { label: "PHP",        file: "php/php-original.svg" },
-  csharp:     { label: "C#",         file: "csharp/csharp-original.svg" },
-  cpp:        { label: "C++",        file: "cplusplus/cplusplus-original.svg" },
-  c:          { label: "C",          file: "c/c-original.svg" },
-  react:      { label: "React",      file: "react/react-original.svg" },
-  node:       { label: "Node.js",    file: "nodejs/nodejs-original.svg" },
-  mysql:      { label: "MySQL",      file: "mysql/mysql-original.svg" },
-  postgres:   { label: "PostgreSQL", file: "postgresql/postgresql-original.svg" },
-  git:        { label: "Git",        file: "git/git-original.svg" },
-  github:     { label: "GitHub",     file: "github/github-original.svg" },
-  bootstrap:  { label: "Bootstrap",  file: "bootstrap/bootstrap-original.svg" },
-  tailwind:   { label: "Tailwind",   file: "tailwindcss/tailwindcss-original.svg" },
-  figma:      { label: "Figma",      file: "figma/figma-original.svg" },
+// text: 1 o 2 letras que se dibujan en el ícono · bg: color de fondo · fg: color de las letras
+const known: Record<string, Lang> = {
+  html:       { label: "HTML",       text: "HT", bg: "#e44d26", fg: "#ffffff" },
+  css:        { label: "CSS",        text: "CS", bg: "#1572b6", fg: "#ffffff" },
+  javascript: { label: "JavaScript", text: "JS", bg: "#f7df1e", fg: "#1a1230" },
+  typescript: { label: "TypeScript", text: "TS", bg: "#3178c6", fg: "#ffffff" },
+  python:     { label: "Python",     text: "PY", bg: "#3776ab", fg: "#ffd43b" },
+  java:       { label: "Java",       text: "JV", bg: "#e76f00", fg: "#ffffff" },
+  php:        { label: "PHP",        text: "PH", bg: "#777bb4", fg: "#ffffff" },
+  csharp:     { label: "C#",         text: "C#", bg: "#68217a", fg: "#ffffff" },
+  cpp:        { label: "C++",        text: "C+", bg: "#00599c", fg: "#ffffff" },
+  c:          { label: "C",          text: "C",  bg: "#283593", fg: "#ffffff" },
+  react:      { label: "React",      text: "RE", bg: "#20232a", fg: "#61dafb" },
+  node:       { label: "Node.js",    text: "NO", bg: "#3c873a", fg: "#ffffff" },
+  mysql:      { label: "MySQL",      text: "SQ", bg: "#00758f", fg: "#ffffff" },
+  postgres:   { label: "PostgreSQL", text: "PG", bg: "#336791", fg: "#ffffff" },
+  git:        { label: "Git",        text: "GT", bg: "#f05032", fg: "#ffffff" },
+  github:     { label: "GitHub",     text: "GH", bg: "#24292e", fg: "#ffffff" },
+  bootstrap:  { label: "Bootstrap",  text: "BS", bg: "#7952b3", fg: "#ffffff" },
+  tailwind:   { label: "Tailwind",   text: "TW", bg: "#38bdf8", fg: "#1a1230" },
+  figma:      { label: "Figma",      text: "FG", bg: "#f24e1e", fg: "#ffffff" },
 };
 
-export interface Lang { label: string; icon?: string }
-
-// Si la clave no existe en la lista, se muestra como texto en vez de ícono
+// Si la clave no está en la lista, crea un ícono gris con sus 2 primeras letras
 export function getLang(key: string): Lang {
-  const k = known[key.trim().toLowerCase()];
-  return k ? { label: k.label, icon: `${BASE}/${k.file}` } : { label: key };
+  return known[key.trim().toLowerCase()] ?? {
+    label: key, text: key.trim().slice(0, 2).toUpperCase(), bg: "#4a4470", fg: "#ffffff",
+  };
 }

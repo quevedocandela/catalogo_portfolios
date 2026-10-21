@@ -1,0 +1,44 @@
+---
+import { getLang } from "../data/languages";
+//interface Props { lang: string }
+const { lang } = Astro.props;
+const l = getLang(lang);
+
+// Fuente de 3x5 píxeles (15 dígitos por letra: 5 filas de 3)
+const FONT: Record<string, string> = {
+  A: "010101111101101", B: "110101110101110", C: "011100100100011", D: "110101101101110",
+  E: "111100110100111", F: "111100110100100", G: "011100101101011", H: "101101111101101",
+  I: "111010010010111", J: "001001001101010", K: "101101110101101", L: "100100100100111",
+  M: "101111111101101", N: "110101101101101", O: "010101101101010", P: "110101110100100",
+  Q: "010101101111011", R: "110101110101101", S: "011100010001110", T: "111010010010010",
+  U: "101101101101111", V: "101101101101010", W: "101101111111101", X: "101101010101101",
+  Y: "101101010010010", Z: "111001010100111", "#": "101111101111101", "+": "000010111010000",
+};
+
+const chars = l.text.toUpperCase().slice(0, 2).split("");
+const s = chars.length === 1 ? 2 : 1;                 // 1 letra = más grande
+const gw = (chars.length * 3 + (chars.length - 1)) * s;
+const x0 = 1 + Math.floor((11 - gw) / 2);
+const y0 = 1 + Math.floor((11 - 5 * s) / 2);
+
+const pixels: { x: number; y: number }[] = [];
+chars.forEach((ch, i) => {
+  const g = FONT[ch];
+  if (!g) return;
+  for (let r = 0; r < 5; r++)
+    for (let c = 0; c < 3; c++)
+      if (g[r * 3 + c] === "1") pixels.push({ x: x0 + i * 4 * s + c * s, y: y0 + r * s });
+});
+---
+<svg class="pi" viewBox="0 0 13 13" shape-rendering="crispEdges" role="img" aria-label={l.label}>
+  <title>{l.label}</title>
+  <path d="M1 0h11v1h1v11h-1v1H1v-1H0V1h1z" fill="#1a1230" />
+  <path d="M2 1h9v1h1v9h-1v1H2v-1H1V2h1z" fill={l.bg} />
+  <rect x="2" y="1" width="9" height="1" fill="#fff" opacity=".3" />
+  <rect x="2" y="11" width="9" height="1" fill="#000" opacity=".3" />
+  {pixels.map((p) => <rect x={p.x} y={p.y} width={s} height={s} fill={l.fg} />)}
+</svg>
+
+<style>
+  .pi { display: block; width: var(--icon, 34px); height: var(--icon, 34px); }
+</style>
