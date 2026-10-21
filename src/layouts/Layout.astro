@@ -1,0 +1,35 @@
+---
+interface Props { title: string }
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Lexend:wght@400;600;700&family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #150f2b; --surface: #201850; --text: #f1ecff; --muted: #a9a1cc; --line: #3b2f7a;
+    --accent: #ffd23f; --accent-text: #150f2b;
+    --yellow: #ffd23f; --pink: #ff4f9a; --cyan: #3de6ff; --green: #5cf08a;
+    --font-pixel: "Press Start 2P", monospace;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 64px; }
+  input, button { font: inherit; }
+</style>

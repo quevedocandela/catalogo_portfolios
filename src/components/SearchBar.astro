@@ -1,0 +1,36 @@
+---
+---
+<div class="bar">
+  <input id="q" type="search" placeholder="Buscar por nombre o proyecto" aria-label="Buscar" />
+  <span id="count"></span>
+</div>
+
+<style>
+  .bar { max-width: 1200px; margin: 0 auto; padding: 40px 24px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  input { flex: 1; min-width: 220px; padding: 12px 16px; border: 2px solid var(--line); background: var(--surface); color: var(--text); font-family: var(--font-mono); font-size: 1rem; }
+  input::placeholder { color: var(--muted); }
+  input:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
+  #count { color: var(--green); font-family: var(--font-mono); font-size: .9rem; }
+</style>
+
+<script>
+  const input = document.getElementById("q") as HTMLInputElement;
+  const count = document.getElementById("count")!;
+  const cards = document.querySelectorAll<HTMLElement>("[data-search]");
+  const empty = document.getElementById("empty");
+
+  function filter() {
+    const term = input.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach((card) => {
+      const match = card.dataset.search!.includes(term);
+      card.hidden = !match;
+      if (match) visible++;
+    });
+    count.textContent = `${visible} de ${cards.length} portfolios`;
+    if (empty) empty.hidden = visible > 0;
+  }
+
+  input.addEventListener("input", filter);
+  filter();
+</script>
