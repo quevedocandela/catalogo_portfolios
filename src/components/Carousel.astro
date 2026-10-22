@@ -1,96 +1,336 @@
 ---
 import { slides } from "../data/carousel";
 ---
-<section class="carousel" aria-roledescription="carrusel" aria-label="Imágenes de desarrollo de software">
+
+<section
+  class="carousel"
+  aria-roledescription="carrusel"
+  aria-label="Imágenes de desarrollo de software"
+>
   <div class="frame">
-    <div class="viewport" id="viewport">
-      <div class="track" id="track">
+    <div class="viewport">
+      <div class="track">
+
         {slides.map((s, i) => (
-          <div class="slide" role="group" aria-roledescription="diapositiva" aria-label={`${i + 1} de ${slides.length}`}>
-            <img src={s.src} alt={s.alt} loading={i === 0 ? "eager" : "lazy"} draggable="false" />
+          <div
+            class="slide"
+            role="group"
+            aria-roledescription="diapositiva"
+            aria-label={`${i + 1} de ${slides.length}`}
+          >
+            <img
+              src={s.src}
+              alt={s.alt}
+              loading={i === 0 ? "eager" : "lazy"}
+              draggable="false"
+            />
           </div>
         ))}
+
       </div>
     </div>
-    <button class="nav prev" aria-label="Anterior">‹</button>
-    <button class="nav next" aria-label="Siguiente">›</button>
+
+    <button class="nav prev" aria-label="Anterior">
+      ‹
+    </button>
+
+    <button class="nav next" aria-label="Siguiente">
+      ›
+    </button>
   </div>
+
   <div class="dots">
-    {slides.map((_, i) => <button class="dot" data-i={i} aria-label={`Ir a la imagen ${i + 1}`}></button>)}
+    {slides.map((_, i) => (
+      <button
+        class="dot"
+        data-i={i}
+        aria-label={`Ir a la imagen ${i + 1}`}
+      ></button>
+    ))}
   </div>
 </section>
 
 <style>
-  .carousel { max-width: 1200px; margin: 32px auto 0; padding: 0 24px; }
-  .frame { position: relative; border: 3px solid var(--yellow); box-shadow: 8px 8px 0 var(--pink); background: var(--surface); }
-  /* líneas de pantalla retro */
-  .frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0 2px, transparent 2px 4px); }
-  .viewport { overflow: hidden; aspect-ratio: 16 / 7; }
-  .track { display: flex; height: 100%; transition: transform .6s cubic-bezier(.7, 0, .2, 1); }
-  .slide { min-width: 100%; height: 100%; overflow: hidden; background: var(--surface); }
-  .slide img { width: 100%; height: 100%; object-fit: cover; display: block; transform-origin: 50% 50%; }
-  .slide:nth-child(even) img { transform-origin: 30% 60%; }
-  .slide:nth-child(3n) img { transform-origin: 70% 40%; }
-  /* zoom lento (efecto Ken Burns) en la imagen activa */
-  .slide.active img { animation: zoom 7s ease-out forwards; }
-  @keyframes zoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+  .carousel {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+  }
 
-  .nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 40px; height: 40px; border: 0; background: var(--yellow); color: var(--accent-text); font-size: 1.6rem; line-height: 1; cursor: pointer; }
-  .prev { left: 12px; } .next { right: 12px; }
-  .nav:hover { background: #fff; }
-  .nav:focus-visible, .dot:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
-  .dots { display: flex; justify-content: center; gap: 10px; margin-top: 22px; }
-  .dot { width: 12px; height: 12px; border: 0; padding: 0; background: var(--line); cursor: pointer; }
-  .dot.active { background: var(--yellow); }
-  @media (max-width: 640px) { .viewport { aspect-ratio: 4 / 3; } }
-  @media (prefers-reduced-motion: reduce) { .track { transition: none; } .slide.active img { animation: none; } }
+  .frame {
+    position: relative;
+    border: 3px solid var(--yellow);
+    box-shadow: 8px 8px 0 var(--pink);
+    background: var(--surface);
+  }
+
+  /* Efecto de pantalla retro */
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,.12) 0 2px,
+      transparent 2px 4px
+    );
+  }
+
+  .viewport {
+    overflow: hidden;
+    aspect-ratio: 16 / 7;
+  }
+
+  .track {
+    display: flex;
+    height: 100%;
+    transition: transform .6s cubic-bezier(.7, 0, .2, 1);
+  }
+
+  .slide {
+    min-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform-origin: 50% 50%;
+  }
+
+  .slide:nth-child(even) img {
+    transform-origin: 30% 60%;
+  }
+
+  .slide:nth-child(3n) img {
+    transform-origin: 70% 40%;
+  }
+
+  /* Zoom suave en cada imagen */
+  .slide.active img {
+    animation: zoom 3.5s ease-out forwards;
+  }
+
+  @keyframes zoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.12);
+    }
+  }
+
+  /* Flechas */
+  .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: var(--yellow);
+    color: var(--accent-text);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .prev {
+    left: 12px;
+  }
+
+  .next {
+    right: 12px;
+  }
+
+  .nav:hover {
+    background: #fff;
+  }
+
+  .nav:focus-visible,
+  .dot:focus-visible {
+    outline: 3px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  /* Puntitos indicadores */
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border: 0;
+    padding: 0;
+    background: var(--line);
+    cursor: pointer;
+  }
+
+  .dot.active {
+    background: var(--yellow);
+  }
+
+  /* Diseño para celulares */
   @media (max-width: 640px) {
-    .carousel { padding: 0 16px; }
-    .frame { box-shadow: 5px 5px 0 var(--pink); }
-    .nav { width: 34px; height: 34px; front-size: 1.3rem; }
-    .prev {left: 8px; } .next { right: 8px; }
+    .viewport {
+      aspect-ratio: 4 / 3;
+    }
+
+    .carousel {
+      padding: 0 16px;
+    }
+
+    .frame {
+      box-shadow: 5px 5px 0 var(--pink);
+    }
+
+    .nav {
+      width: 34px;
+      height: 34px;
+      font-size: 1.3rem;
+    }
+
+    .prev {
+      left: 8px;
+    }
+
+    .next {
+      right: 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      transition: none;
+    }
+
+    .slide.active img {
+      animation: none;
+    }
   }
 </style>
 
 <script>
-  const viewport = document.getElementById("viewport")!;
-  const track = document.getElementById("track")!;
-  const slideEls = document.querySelectorAll<HTMLElement>(".slide");
-  const dots = document.querySelectorAll<HTMLButtonElement>(".dot");
-  const carousel = document.querySelector<HTMLElement>(".carousel")!;
-  const total = dots.length;
-  let index = 0;
-  let timer: number | undefined;
+  const carousel = document.querySelector<HTMLElement>(".carousel");
 
-  function go(n: number) {
-    index = (n + total) % total;
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach((d, i) => d.classList.toggle("active", i === index));
-    slideEls.forEach((s, i) => s.classList.toggle("active", i === index));
+  if (carousel) {
+    const viewport = carousel.querySelector<HTMLElement>(".viewport")!;
+    const track = carousel.querySelector<HTMLElement>(".track")!;
+    const slideEls = carousel.querySelectorAll<HTMLElement>(".slide");
+    const dots = carousel.querySelectorAll<HTMLButtonElement>(".dot");
+
+    const total = slideEls.length;
+
+    let index = 0;
+    let timer: number | undefined;
+    let hovering = false;
+
+    // Tiempo entre imágenes: 4 segundos
+    const INTERVALO = 4000;
+
+    // Función para cambiar de imagen
+    function go(n: number) {
+      if (total === 0) return;
+
+      index = (n + total) % total;
+
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
+
+      slideEls.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+      });
+    }
+
+    // Detener el movimiento automático
+    function stop() {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    }
+
+    // Iniciar el movimiento automático
+    function start() {
+      stop();
+      if (total <= 1) return;
+
+      timer = window.setInterval(() => {
+        go(index + 1);
+      }, INTERVALO);
+    }
+
+    // Después de un clic manual, reinicia la cuenta solo si el cursor está encima
+    function restart() {
+      if (hovering) start();
+    }
+
+    // Se mueve solo únicamente mientras el cursor está sobre el carrusel
+    carousel.addEventListener("pointerenter", (e) => {
+      if (e.pointerType !== "mouse") return;
+      hovering = true;
+      start();
+    });
+
+    carousel.addEventListener("pointerleave", (e) => {
+      if (e.pointerType !== "mouse") return;
+      hovering = false;
+      stop();
+    });
+
+    // Botón anterior
+    carousel.querySelector(".prev")?.addEventListener("click", () => {
+      go(index - 1);
+      restart();
+    });
+
+    // Botón siguiente
+    carousel.querySelector(".next")?.addEventListener("click", () => {
+      go(index + 1);
+      restart();
+    });
+
+    // Puntitos para elegir imagen
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        go(i);
+        restart();
+      });
+    });
+
+    // Deslizar con el dedo en celulares
+    let startX = 0;
+
+    viewport.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    viewport.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+
+      if (Math.abs(dx) > 40) {
+        go(index + (dx < 0 ? 1 : -1));
+      }
+    });
+
+    // Mostrar la primera imagen (sin iniciar el movimiento automático)
+    go(0);
   }
-  function stop() { if (timer) clearInterval(timer); }
-  function start() {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    stop();
-    timer = window.setInterval(() => go(index + 1), 5500);
-  }
-
-  carousel.querySelector(".prev")!.addEventListener("click", () => go(index - 1));
-  carousel.querySelector(".next")!.addEventListener("click", () => go(index + 1));
-  dots.forEach((d) => d.addEventListener("click", () => go(Number(d.dataset.i))));
-  carousel.addEventListener("mouseenter", stop);
-  carousel.addEventListener("mouseleave", start);
-  carousel.addEventListener("focusin", stop);
-  carousel.addEventListener("focusout", start);
-
-  // Deslizar con el dedo en el celular
-  let startX = 0;
-  viewport.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  viewport.addEventListener("touchend", (e) => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
-  });
-
-  go(0);
-  start();
 </script>
